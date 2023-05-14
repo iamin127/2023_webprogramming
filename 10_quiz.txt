@@ -1,0 +1,23 @@
+react에서 arrow function은 일반적으로 컴포넌트 및 이벤트 핸들러를 정의하는 일반 함수 대신 사용됩니다. function와 arrow function의 주요 차이점은 이 키워드를 처리하는 방법에 있습니다. 정규 함수는 호출될 때 자체적으로 이 값을 정의합니다. 이 문제는 이벤트 핸들러 및 구성 요소 메서드에서 예기치 않은 동작을 일으킬 수 있으므로 React에서 문제가 될 수 있습니다. 예를 들어 일반 함수를 사용하여 이벤트 핸들러를 정의한 다음 이를 하위 구성 요소에 지주로 전달하는 경우 함수가 정의된 상위 구성 요소 대신 하위 구성 요소를 참조합니다. 그러나 arrow function은 주변 어휘 범위에서 이를 상속합니다. 즉, 일반적으로 사용자가 원하는 구성 요소의 이 값이 정의된 위치에 사용합니다. arrow function은 또한 일반 기능보다 더 간결하고 종종 읽기 쉽습니다.
+
+- 일반 function 예시코드
+class MyComponent extends React.Component {
+  handleClick() {
+    console.log(this.props.message);
+  }
+
+  render() {
+    return <button onClick={this.handleClick.bind(this)}>Click me</button>;
+  }
+}
+
+- arrow fuction 예시코드
+class MyComponent extends React.Component {
+  handleClick = () => {
+    console.log(this.props.message);
+  }
+
+  render() {
+    return <button onClick={this.handleClick}>Click me</button>;
+  }
+}
