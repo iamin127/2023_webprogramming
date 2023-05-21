@@ -1,0 +1,21 @@
+.left {
+    position: relative;
+    align-self: center;
+    width: 420px;
+}
+
+.right {
+    position: relative;
+    align-self: center;
+    width: 420px;
+}
+.name {
+    position: absolute;
+    text-shadow: 2px 3px 1px rgb(0, 0, 0);
+    font-size: 20px;
+    top: 50%;
+    left: 20%;
+    bottom: 10%;
+    color: white;
+    height: 30px;
+}

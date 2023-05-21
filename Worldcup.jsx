@@ -15,6 +15,7 @@ import p14 from './assets/한소희.png'
 import p15 from './assets/해린.png'
 import p16 from './assets/허윤진.png'
 import { useEffect, useState } from 'react'
+import Statistics from './Statistics';
 
 
 function Worldcup() {
@@ -40,8 +41,31 @@ function Worldcup() {
     const [game, setGame] = useState([]);
     const [round, setRound] = useState(0);
     const [nextGame, setNextGame] = useState([]);
+    const [stat, setStat] = useState({
+        "고윤정": 0,
+        "나연": 0,
+        "다니엘": 0,
+        "민지": 0,
+        "손예진": 0,
+        "송혜교": 0,
+        "수지": 0,
+        "아이린": 0,
+        "전지현": 0,
+        "조이": 0,
+        "지니": 0,
+        "지우": 0,
+        "하니": 0,
+        "한소희": 0,
+        "해린": 0,
+        "허윤진": 0,
+    });
 
     useEffect(() => {
+        const 문자열 = localStorage.getItem("월드컵, 2019110052");
+        if( 문자열 != null ) {
+            setStat( JSON.parse(문자열) );
+        }
+
         setGame(candidate.map(c => {
             return {name: c.name, src: c.src, order: Math.random()}
         }).sort((l, r) => {
@@ -58,24 +82,48 @@ function Worldcup() {
     }, [round]);
 
     if( game.length === 1 ){
+        localStorage.setItem("월드컵, 2019110052", JSON.stringify( stat ) );
         return <div>
             <p>이상형 월드컵 우승</p>
-            <img src={game[0].src} /> <p>{game[0].name}</p>
+            <img src={game[0].src} /> <p>{game[0].name}</p> <p>{ stat[ game[0].name ] } 번 승리</p>
+
+            <Statistics data={Object.entries(stat)} />
+            
+            <table>
+                {Object.keys(stat).map(name => {
+                    return <tr key={name}><td>{name}</td><td>{stat[name]}</td></tr>
+                })}
+            </table>
         </div>
     }
     if( game.length === 0 || round + 1 > game.length / 2 ) return <p>로딩중입니다</p>;
+    const left = round * 2, right = round * 2 + 1;
+    console.log(stat);
+
+    const leftFunction = () => {
+        setStat({
+            ...stat, 
+            [game[left].name]: stat[ game[left].name ] + 1
+        });
+        setNextGame((prev) => prev.concat(game[left]))
+        setRound(round => round + 1);
+    };
+    const rightFunction = () => {
+        setStat({
+            ...stat, 
+            [game[right].name]: stat[ game[right].name ] + 1
+        });
+        setNextGame((prev) => prev.concat(game[right]))
+        setRound(round => round + 1);
+    };
+
     return <div>
         <p>이상형 월드컵 {round + 1} / {game.length / 2} <b>{game.length === 2 ? "결승" : game.length + "강"}</b></p>
         <div style={{ display: 'flex', flexDirection: 'row' }}>
-            <img src={game[round * 2].src} onClick={() => {
-                setNextGame((prev) => prev.concat(game[round * 2]))
-                setRound(round => round + 1);
-            }} />
-            <img src={game[round * 2 + 1].src} onClick={() => {
-                setNextGame((prev) => prev.concat(game[round * 2 + 1]))
-                setRound(round => round + 1);
-            }}/>
+            <img src={game[left].src} onClick={leftFunction} />
+            <img src={game[right].src} onClick={rightFunction}/>
         </div>
+        <Statistics data={Object.entries(stat)} />
     </div>;
 }
 
